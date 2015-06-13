@@ -1,0 +1,15 @@
+.reveal section del {
+  color: red;
+}
+
+.section .reveal .state-background {
+  background: #00F url("css/mslogo.png") no-repeat 5% 95%;
+}
+
+
+
+/*
+.title-blue .reveal .state-background {
+  background: #00F url("mslogo.png") no-repeat 5% 95%;
+}
+*/
