@@ -1,0 +1,13 @@
+# Site settings
+title: RHadoop tutorial
+email: adevries@microsoft.com
+description: > # this means to ignore newlines until "baseurl:"
+  This is a tutorial for using R inside Hadoop, specifically with the RHadoop project, with an emphasis on mapreduce().
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://localhost" # the base hostname & protocol for your site
+twitter_username: RevoAndrie
+github_username:  andrie
+
+# Build settings
+markdown: kramdown
+highlighter: null
