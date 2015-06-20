@@ -13,3 +13,8 @@ vignettes/*.html
 vignettes/*.pdf
 
 data/trip_data_1.csv
+
+
+# gh-pages artefacts
+.ssas-cache/*
+_site/*
