@@ -1,16 +1,17 @@
-Using R with Hadoop
+Introduction to Using R with Hadoop
 ========================================================
 author: Andrie de Vries & Simon Field
 date: 2015-07-01, UseR!2015
 width: 1680
 height: 1050
+css: css/custom.css
 
 
 About us
 ========================================================
 
 Andrie de Vries
-- Set up an indepndent market research firm in 2009
+- Set up an independent market research firm in 2009
 - Started using R
 - Joined Revolution Analytics in 2013
 - Author of ggdendro, checkpoint, miniCRAN packages
@@ -206,8 +207,6 @@ NULL
 ```r
 # rmr.options(backend.parameters = list("mapreduce.map.java.opts=-Xmx800M",
 #                                       "mapreduce.reduce.java.opts=-Xmx800M"))
-
-# R -----------------------------------------------------------------------
 ```
 
 
@@ -4222,10 +4221,6 @@ lapply(x, function(x)cbind(x, x^2))
 [1,] 1000 1e+06
 ```
 
-```r
-# rmr ---------------------------------------------------------------------
-```
-
 Demo 1
 ======
 
@@ -4242,7 +4237,7 @@ a()
 ```
 
 ```
-[1] "/tmp/Rtmpc49egI/file2d3b24aacf5a"
+[1] "/tmp/RtmpULjWib/filef3a421a1ba9"
 ```
 
 ```r
@@ -5269,38 +5264,13 @@ Demo 2
 
 
 ```r
-library(rmr2)
-library(rhdfs)
-hdfs.init()
-
-rmr.options(backend = "local")
-```
-
-```
-NULL
-```
-
-```r
-rmr.options(backend.parameters = list("mapreduce.map.java.opts=-Xmx800M",
-                                      "mapreduce.reduce.java.opts=-Xmx800M"))
-```
-
-```
-NULL
-```
-
-Demo 2
-======
-
-
-```r
 groups <- rbinom(32, n = 50, prob = 0.4)
 tapply(groups, groups, length)
 ```
 
 ```
- 9 10 11 12 13 14 15 16 17 18 20 
- 2  2  3 12  6  7  8  3  4  2  1 
+ 5  9 10 11 12 13 14 15 16 17 19 
+ 1  2  4  6 10  8  8  5  4  1  1 
 ```
 
 Demo 2
@@ -5322,15 +5292,27 @@ as.data.frame(y)[order(y[["key"]]), ]
 
 ```
    key val
-10   9   2
-4   10   2
-5   11   3
-3   12  12
-8   13   6
-2   14   7
-1   15   8
-11  16   3
-6   17   4
-9   18   2
-7   20   1
+11   5   1
+8    9   2
+1   10   4
+10  11   6
+3   12  10
+6   13   8
+5   14   8
+4   15   5
+7   16   4
+2   17   1
+9   19   1
 ```
+
+Demo 2
+======
+
+
+
+
+End
+===
+type: section
+
+Thank you.

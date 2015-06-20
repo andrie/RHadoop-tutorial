@@ -1,4 +1,4 @@
-Introduction to Using R with Hadoop
+Wordcount with mapreduce()
 ========================================================
 author: Andrie de Vries & Simon Field
 date: 2015-07-01, UseR!2015
@@ -95,6 +95,9 @@ Demo 2
 
 ```{r demo-2-read, cache=FALSE, include=FALSE}
 read_chunk("demo/02-intro-tapply.R")
+```
+
+```{r load-packages, include=FALSE}
 ```
 
 ```{r R}

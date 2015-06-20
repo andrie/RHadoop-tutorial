@@ -1,0 +1,127 @@
+Analysing New York taxis with RHadoop
+========================================================
+author: Andrie de Vries & Michele Usuelli
+date: 2015-07-01, UseR!2015
+width: 1680
+height: 1050
+css: css/custom.css
+
+Introduction to the taxi data
+====
+type: section
+
+
+Introduction to the taxi data
+====
+
+The data is at http://publish.illinois.edu/dbwork/open-data/
+
+Previous analysis published at
+
+> Brian Donovan and Daniel B. Work. “Using coarse GPS data to quantify city-scale transportation system resilience to extreme events.”  to appear, Transportation Research Board 94th Annual Meeting, August 2014.  [preprint](https://www.dropbox.com/s/deruyszudfqrll0/TRB15DonovanWork.pdf), [source code](https://github.com/UIUC-Transportation-Data/gpsresilience).
+
+
+Data dictionary
+===============
+
+Field | Description
+----- | -----------
+medallion |  a permit to operate a yellow taxi cab in New York City, it is effectively a (randomly assigned) car ID.  See also medallions.
+hack license |  a license to drive the vehicle, it is effectively a (randomly assigned) driver ID. See also hack license.
+vender id |   e.g., Verifone Transportation Systems (VTS), or Mobile Knowledge Systems Inc (CMT), implemented as part of the Technology Passenger Enhancements Project.
+rate_code |  taximeter rate, see NYCT&L description.
+store_and_fwd_flag |  unknown attribute.
+pickup datetime |  start time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
+dropoff datetime |  end time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
+passenger count |  number of passengers on the trip, default value is one.
+trip time in secs |  trip time measured by the taximeter in seconds.
+trip distance |  trip distance measured by the taximeter in miles.
+pickup_longitude and pickup_latitude |  GPS coordinates at the start of the trip.
+dropoff longitude and dropoff latitude |  GPS coordinates at the end of the trip.
+
+Source: http://publish.illinois.edu/dbwork/open-data/
+
+
+Using a local context in rmr2
+======
+
+```{r taxi-2-rmr-local, cache=FALSE, include=FALSE}
+read_chunk("taxi/taxi-2-rmr-local.R")
+```
+
+```{r load-packages}
+```
+
+make.input.format()
+======
+
+The function `make.input.format()` allows you to specify the attributes of your input data.
+
+The argument `format = "csv"` specifies a csv file. This is a wrapper around `read.table()`.
+
+```{r make.input.format}
+```
+
+from.dfs()
+======
+
+Use from.dfs() to get a (small) file from dfs to local memory
+
+```{r from.dfs-1}
+```
+
+from.dfs()
+======
+
+Use `keys()` and `values()` to extract the components
+
+```{r from.dfs-2}
+```
+
+mapreduce() without any transformation
+======
+
+```{r mapreduce-1-a}
+```
+
+mapreduce() without any transformation
+======
+
+```{r mapreduce-1-b}
+```
+
+mapreduce() with a simpler mapper
+======
+
+```{r mapreduce-2}
+```
+
+mapreduce() emitting a keyvalue pair
+======
+
+```{r mapreduce-3}
+```
+
+mapreduce() with a reducer
+======
+
+```{r mapreduce-4}
+```
+
+mapreduce() with a more sensible mapper
+======
+
+```{r mapreduce-5}
+```
+
+mapreduce() the final step
+======
+
+```{r mapreduce-6}
+```
+
+End
+===
+type: section
+
+Thank you.
