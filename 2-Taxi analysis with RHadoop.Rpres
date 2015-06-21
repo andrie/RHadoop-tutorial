@@ -58,6 +58,10 @@ dropoff_longitude and dropoff_latitude |  GPS coordinates at the end of the trip
 
 Source: http://publish.illinois.edu/dbwork/open-data/
 
+Introduction to mapreduce()
+==========
+type: section
+
 
 Using a local context in rmr2
 ======
@@ -135,6 +139,29 @@ mapreduce() the final step
 ======
 
 ```{r mapreduce-6}
+```
+
+Analysing by hour
+=================
+type: section
+
+Doing the analysis by hour
+==========================
+
+```{r mapreduce-7-a}
+```
+
+Doing the analysis by hour
+==========================
+
+```{r mapreduce-7-b}
+```
+
+
+Doing the analysis by hour
+==========================
+
+```{r mapreduce-7-plot}
 ```
 
 End
