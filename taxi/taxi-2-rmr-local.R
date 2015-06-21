@@ -5,8 +5,7 @@ rmr.options(backend = "local")
 ## @knitr make.input.format -----------------------------------------------
 taxi.format <- make.input.format("csv", sep = ",",
                                  colClasses = "character",
-                                 stringsAsFactors = FALSE,
-                                 skip = 1
+                                 stringsAsFactors = FALSE
 )
 
 

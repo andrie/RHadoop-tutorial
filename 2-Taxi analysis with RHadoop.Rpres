@@ -6,9 +6,26 @@ width: 1680
 height: 1050
 css: css/custom.css
 
+Motivation: New York taxi data
+=============
+
+An inconveniently sized data set (~200GB uncompressed CSV).
+
+Contains information about every single taxi trip in New York over a 4-year period.
+
+***
+
+![](images/taxi-tweet.png)
+
+Source: http://chriswhong.com/open-data/foil_nyc_taxi/
+
 Introduction to the taxi data
 ====
 type: section
+
+```{r include=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
 
 
 Introduction to the taxi data
@@ -27,17 +44,17 @@ Data dictionary
 Field | Description
 ----- | -----------
 medallion |  a permit to operate a yellow taxi cab in New York City, it is effectively a (randomly assigned) car ID.  See also medallions.
-hack license |  a license to drive the vehicle, it is effectively a (randomly assigned) driver ID. See also hack license.
-vender id |   e.g., Verifone Transportation Systems (VTS), or Mobile Knowledge Systems Inc (CMT), implemented as part of the Technology Passenger Enhancements Project.
+hack_license |  a license to drive the vehicle, it is effectively a (randomly assigned) driver ID. See also hack license.
+vendor_id |   e.g., Verifone Transportation Systems (VTS), or Mobile Knowledge Systems Inc (CMT), implemented as part of the Technology Passenger Enhancements Project.
 rate_code |  taximeter rate, see NYCT&L description.
 store_and_fwd_flag |  unknown attribute.
-pickup datetime |  start time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
-dropoff datetime |  end time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
-passenger count |  number of passengers on the trip, default value is one.
-trip time in secs |  trip time measured by the taximeter in seconds.
-trip distance |  trip distance measured by the taximeter in miles.
+pickup_datetime |  start time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
+dropoff_datetime |  end time of the trip, mm-dd-yyyy hh24:mm:ss EDT.
+passenger_count |  number of passengers on the trip, default value is one.
+trip_time_in_secs |  trip time measured by the taximeter in seconds.
+trip_distance |  trip distance measured by the taximeter in miles.
 pickup_longitude and pickup_latitude |  GPS coordinates at the start of the trip.
-dropoff longitude and dropoff latitude |  GPS coordinates at the end of the trip.
+dropoff_longitude and dropoff_latitude |  GPS coordinates at the end of the trip.
 
 Source: http://publish.illinois.edu/dbwork/open-data/
 

@@ -3,7 +3,7 @@ outfolder <- "C:/Users/adevries/documents/github/RHadoop-tutorial/RHadoop-tutori
 
 zips <- list.files(infolder, pattern = "trip_data.*", full.names = TRUE)
 
-downSample <- function(infile, outfile, n = 1000, keepHeader = TRUE){
+downSample <- function(infile, outfile, n = 1000, keepHeader = FALSE){
   message(basename(outfile))
   con <- file(infile, open = "r")
   conout <- file(outfile, open = "a")
@@ -46,3 +46,4 @@ dat <- readLines(outfile)
 length(dat)
 head(dat)
 tail(dat)
+
