@@ -1,0 +1,89 @@
+Computing on distributed matrices
+========================================================
+author: Andrie de Vries & Michele Usuelli
+date: 2015-07-01, UseR!2015
+width: 1680
+height: 1050
+css: css/custom.css
+
+
+Linear regression
+=============
+
+$$Y = X \beta + e$$
+
+To solve for `b`, create a loss function, differentiate and solve for a minimum:
+
+$$B = (X’X)^{-1} X’Y$$
+
+Re-arrange:
+
+$$(X’X) \beta = X’ Y$$
+
+The R function  `b <- solve(x, y)` gives the solution to  $xb = y$
+
+```{r, eval=FALSE}
+b <- solve(x’x, x’y)
+```
+
+The math of distributed computing
+=================================
+
+* Commutative property
+
+$$a + b  == b + a$$
+
+* Associative property
+
+$$(a + b) + c == a + (b + c)$$
+
+* Distributive property
+
+$$a * (b + c) == (a * b) + (b * c)$$
+
+
+
+Computing X'X is a distributive operation
+=============
+
+![](images/SSCP-matrix.png)
+
+Regression
+==========
+
+```{r taxi-2-rmr-local, cache=FALSE, include=FALSE}
+read_chunk("demo/09-linear-regression.R")
+```
+
+```{r load-packages}
+```
+
+Regression
+==========
+
+```{r generate-data}
+```
+
+Regression
+==========
+
+```{r sum-function}
+```
+
+Regression
+==========
+
+```{r XtX}
+```
+
+Regression
+==========
+
+```{r XtY}
+```
+
+Regression
+==========
+
+```{r solve}
+```

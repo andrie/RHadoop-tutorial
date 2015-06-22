@@ -18,9 +18,13 @@ data/trip_data_1.csv
 *.md
 *-cache/*
 *-figure/*
+*_files/*
 
 
 # gh-pages artefacts
 .ssas-cache/*
 _site/*
 .Rproj.user
+
+
+9-old-demo*

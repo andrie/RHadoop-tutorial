@@ -1,34 +1,45 @@
 Introduction to Using R with Hadoop
 ========================================================
-author: Andrie de Vries & Simon Field
+author: Andrie de Vries & Michele Usuelli
 date: 2015-07-01, UseR!2015
 width: 1680
 height: 1050
 css: css/custom.css
+
+```{r include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
 
 
 About us
 ========================================================
 
 Andrie de Vries
+- Programme Manager, Community projects (Microsoft)
 - Set up an independent market research firm in 2009
-- Started using R
 - Joined Revolution Analytics in 2013
-- Author of ggdendro, checkpoint, miniCRAN packages
-- Co-author of R for Dummies
+- Author of `ggdendro`, `checkpoint` and `miniCRAN` packages on CRAN
+- Co-author of *R for Dummies*
+
+![](images/r-for-dummies.jpg)
 
 ***
 
-Simon Field
-- Career in high performance databases, including TeraData and Netezza
-- Joined Revolution Analytics in 2013
-- Responsible for Technical Pre-sales in Europe
+Michele Usuelli
+- Data Scientist (Microsoft)
+- Joined Revolution Analytics in 2014
+- Author of *R Machine Learning Essentials*
+
+![](images/r-machine-learning.png)
+
 
 
 Connecting to Azure with your browser
 ========================================================
 
 http://ra-ldn-cluster-master-02.cloudapp.net:8787
+
+You should already have received individual login details
 
 Why Hadoop?
 ========================================================
@@ -39,7 +50,7 @@ Source: http://www.indeed.com/jobtrends?q=HTML5%2C+hadoop%2C+SAS&l=
 
 Hype central
 ========================================================
-![](images/dilbert-big-data-in-the-cloud)
+![](images/dilbert-big-data-in-the-cloud.png)
 
 
 Is your problem big enough for Hadoop?
@@ -48,10 +59,10 @@ Is your problem big enough for Hadoop?
 When to use Hadoop?
 * Conventional processing tools won’t work on your data
 * Your data is really BIG
-  - Won’t fit/process in your favourite database/file-system
+- Won’t fit/process in your favourite database or file-system
 * Your data is really diverse !
-  - Semi-structured – JSON, XML, Logs, Images, Sounds
-* You’re a wiz at programming
+- Semi-structured – JSON, XML, Logs, Images, Sounds
+* You’re a whiz at programming
 
 ***
 When not to use Hadoop?
@@ -64,19 +75,22 @@ My job is reducing
 ![](images/xkcd-my-job-is-compiling.png)
 
 
-Hadoop logical flow
-==================
-![](images/img-hadoop-logical-flow.png)
 
-
-Three main components
+Some important components
 =====================
 
-Hadoop                         | RHadoop project | github
--------                        | --------------  | ------
-HDFS (distributed file system) | rhdfs  | ?
-mapreduce (task manager)       | rmr2   | ?
-hbase (database management)    | rhbase | ?
+* HDFS
+  - distributed file system
+  - `rhdfs`
+* mapreduce
+  - task manager
+  - `rmr2`
+* hbase
+  - NOSQL database
+  - `rhbase`
+* hive
+  - SQL like database
+  - `RHbase`
 
 
 MapReduce
@@ -89,18 +103,20 @@ MapReduce
 A programming abstraction
 * Applies to many types of big data calculation
 
-Abstracts messy implementation detail in library
+Hides messy implementation detail in library
 * Implicit parallelisation
 * Load balancing
 * Reduce data movement
 * Robust job / machine failure management
+
+~~You as the programmer doesn't need to think about this (too much)~~
 
 MapReduce solves a generic problem
 ==================================
 
 * Read a large amount of data
 * MAP
-* Extract a summary from each record
+* Extract a summary from each record / block
 * Shuffle and sort
 * REDUCE
 * Aggregate, filter transform
@@ -108,6 +124,28 @@ MapReduce solves a generic problem
 
 The problem outline is generic – simply implement map and reduce to solve the problem at hand
 
+![](images/img-hadoop-logical-flow.png)
+
+
+
+
+The hadoop mapreduce magic
+==========================
+type:alert
+
+So how does Hadoop do its magic?
+
+**Remember: the key is key**
+
+The Hadoop promise:
+
+**Hadoop guarantees that records with the same key will be processed by the same reducer**
+
+This magic happens during the shuffle and sort phase
+
+**During shuffle and sort, all items with the same key get moved to the same node**
+
+![](images/img-hadoop-logical-flow.png)
 
 
 rmr2
@@ -116,46 +154,74 @@ type: section
 
 rmr2
 ============
+
+The `rmr2` package allows you to write R code in the mapper and reducer, without having to know anything about java.
+
 ![](images/img-rmr2.png)
+
 
 MapReduce in R pseudo-code
 ==========================
 
-In the mapper, v’ is available as data – no need for an explicit read statement
+In the mapper, `v’` is available as data – no need for an explicit read statement
 
 ```{r, eval=FALSE}
 mapper <- function(k, v){
-  ...
-  return(k’, v’)
-}
+    ...
+    keyval(k’, v’)
+    }
 ```
 
-In the reducer, all v’ with the same k’ is processed together
+In the reducer, all `v’` with the same `k’` is processed together
 
 ```{r, eval=FALSE}
 reducer <- function(k’, v’){
-  ...
-  return(k’’, v’’)
-}
+    ...
+    keyval(k’’, v’’)
+    }
 ```
 
+Pass these functions to `mapreduce():
 
+```{r, eval=FALSE}
+mapreduce(input,
+          map = mapper,
+          reduce = reducer,
+          ...)
+```
 
 Testing using the local backend
 ===============================
 
-* The rmr2 package has a “local” back end, completely implemented in R
-* This allows easy (and fast) testing before scaling to the “hadoop” backend
+Local backend
 
 ```{r, eval=FALSE}
 rmr.options(backend = "local")
+```
+
+* The `rmr2` package has a "local" back end, completely implemented in R
+* Useful for development, testing and debugging
+* **Since computation runs entirely in memory, on small data, it's fast!**
+
+
+***
+
+Hadoop backend
+
+```{r, eval=FALSE}
 rmr.options(backend = "hadoop")
 ```
+
+* This allows easy (and fast) testing before scaling to the “hadoop” backend
+* Computation distributed to hdfs and mapreduce
+* Hadoop computation overhead
+
 
 Sending data  R <---> Hadoop
 ============================
 
-* The rmr2 package has 2 convenience functions that allow you to import / export a big.data.object into the R session
+* In a real Hadoop context, your data will be ingested into dfs by dedicated tools, e.g. Squoop or Flume
+* For easy testing and development, the `rmr2` package has two convenience functions that allow you to import / export a `big.data.object` into the R session
 
 ```{r, eval=FALSE}
 to.dfs()
@@ -165,71 +231,87 @@ from.dfs()
 Using the mapreduce() function
 ==============================
 
-* Specify the input, map and reduce function
-* Optionally, specify output, to persist result in hdfs
-* If output = NULL, returns a temporary big.data.object
+```{r, eval=FALSE}
+m <- mapreduce(input,
+               input.format,
+               map,
+               reduce,
+               output = NULL, ...)
+```
+
+* Specify the `input`, `map` and `reduce` functions
+* Optionally, specify `output`, to persist result in hdfs
+* If `output = NULL`, `mapreduce()` returns a temporary `big.data.object`
+* A `big.data.object` is a pointer to a temporary file in dfs
+
+If you know that the resulting object is small, use `to.dfs()` to return data from dfs into your R session
 
 ```{r, eval=FALSE}
-x <- mapreduce(input, map, reduce, ...)
-x()  # returns the file location
-     # of the big.data.object
-from.dfs(x) # available in R session
+m()  # returns the file location of the big.data.object
+from.dfs(m) # available in R session
+```
+
+Using the key-value pair
+========================
+
+Everything in hadoop uses a key - value pair. (~~Remember: the key is key!~~)
+
+Use `keyval()` to create the key-value pair inside your mapper and reducer.
+
+```{r, eval=FALSE}
+mapper <- function(k, v){
+    ...
+    keyval(k', v')
+}
+reducer <- function(k, v){
+    ...
+    keyval(k', v')
+}
 ```
 
 
-Demo 1: A first rmr2 script
-===================
-type: section
+Use the helper functions `keys()` and `values()` to separate components from the `big.data.object`
 
-Demo 1
-======
+```{r, eval=FALSE}
+m <- mapreduce(input, map, reduce, ...)
+x <- from.dfs(m) # available in R session
 
-```{r demo-1-read, cache=FALSE, include=FALSE}
-read_chunk("demo/01-intro-lapply.R")
+keys(x)
+values(x)
 ```
 
-```{r load-packages}
+Cheat sheet for a mapreduce flow using rmr2
+=====================
+
+Optional: get a sample of data to dfs:
+```{r, eval=FALSE}
+hdp.file <- to.dfs(...)
+```
+
+Mapreduce:
+
+```{r, eval=FALSE}
+map.fun <- function(k, v){...; keyval(k', v')}
+reduce.fun <- function(k, v){...; keyval(k', v')}
+
+m <- mapreduce(input,
+               map = map.fun,
+               reduce = reduce.fun,
+               ...
+)
+```
+
+Inspect results
+
+```{r, eval=FALSE}
+x <- from.dfs(m)
+
+keys(x)
+values(x)
 ```
 
 
-Demo 1
-======
 
-```{r R}
-```
-
-Demo 1
-======
-
-```{r rmr}
-```
-
-
-Demo 2: Making use of the key
-===================
-type: section
-
-Demo 2
-======
-
-```{r demo-2-read, cache=FALSE, include=FALSE}
-read_chunk("demo/02-intro-tapply.R")
-```
-
-```{r R}
-```
-
-Demo 2
-======
-
-```{r rmr}
-```
-
-Demo 2
-======
-
-```{r demo-2.3}
-```
 
 
 End

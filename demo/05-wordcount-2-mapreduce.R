@@ -2,16 +2,13 @@ library(rmr2)
 library(rhdfs)
 hdfs.init()
 
-source("00-rmr-options.R")
-setRmrOptions(local = TRUE)
+rmr.options(backend = "local")
 
 # Word count --------------------------------------------------------------
 
-# library(stringr)
-
 ebookLocation <- "data/ullyses.txt"
 
-x <- mapreduce(input = ebookLocation,
+m <- mapreduce(input = ebookLocation,
                input.format  =  "text",
 
                map = function(k, v){
@@ -35,11 +32,11 @@ x <- mapreduce(input = ebookLocation,
 
 # Retrieve results and prepare to plot ------------------------------------
 
-x
-returnValue <- from.dfs(x())
+
+x <- from.dfs(m)
 dat <- data.frame(
-    word  = keys(returnValue),
-    count = values(returnValue)
+    word  = keys(x),
+    count = values(x)
     )
 dat <- dat[order(dat$count, decreasing=TRUE), ]
 head(dat, 50)

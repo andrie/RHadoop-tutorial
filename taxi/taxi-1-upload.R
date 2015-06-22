@@ -2,16 +2,14 @@ library(rmr2)
 library(rhdfs)
 hdfs.init()
 
-taxifile <- "data/trip_data_1.csv"
+taxifile <- "data/trip_data_1_sample.csv"
 file.exists(taxifile)
 
-# Create small extract of taxi dat
-dat <- readLines(taxifile, n = 100)
-con <- file("data/trip_data_1_small.csv", open = "w")
-writeLines(dat, con)
-close(con)
 list.files("data")
-hdfs.put("data/trip_data_1_small.csv", "taxi/trip_data_1_small.csv")
+hdfs.ls("data")
+
+hdfs.ls("taxi")
+hdfs.put("data/trip_data_1_sample.csv", "taxi/trip_data_1_sample.csv")
 hdfs.ls("taxi")
 
 # Put taxi data in dfs
