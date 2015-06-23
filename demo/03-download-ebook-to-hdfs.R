@@ -2,8 +2,7 @@ library(rmr2)
 library(rhdfs)
 hdfs.init()
 
-source("00-rmr-options.R")
-setRmrOptions(local = TRUE)
+rmr.options(backend = "local")
 
 # -------------------------------------------------------------------------
 

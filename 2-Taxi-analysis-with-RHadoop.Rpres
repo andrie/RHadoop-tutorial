@@ -74,6 +74,18 @@ read_chunk("taxi/taxi-2-rmr-local.R")
 ```{r load-packages}
 ```
 
+
+Exercise 1
+==========
+type: cobalt
+
+* Open the folder `exercises`
+* Open the file `ex-1-lapply.R`
+* Source the script
+
+You are looking at a simple `mapreduce()` job that simulates `lapply()` in base R.
+
+
 make.input.format()
 ======
 
@@ -152,6 +164,12 @@ mapreduce() with a simpler mapper
 ```{r mapreduce-2}
 ```
 
+mapreduce() with a simpler mapper
+======
+
+![](images/mapreduce-weekdays-0.png)
+
+
 mapreduce() emitting a keyvalue pair
 ======
 
@@ -164,6 +182,16 @@ mapreduce() with a reducer
 ```{r mapreduce-4}
 ```
 
+mapreduce() with a reducer
+======
+
+![](images/mapreduce-weekdays-1.png)
+
+Can we write a more sensible mapper and reducer?
+======
+
+![](images/mapreduce-weekdays-2.png)
+
 mapreduce() with a more sensible mapper
 ======
 
@@ -175,6 +203,28 @@ mapreduce() the final step
 
 ```{r mapreduce-6}
 ```
+
+Exercise 2
+==========
+type: cobalt
+
+* Open the folder `exercises`
+* Open the file `ex-2-taxi-local.R`
+* Source the script
+
+This script contains a short `mapreduce()` script on the taxi data.
+
+Run the code, section by section.
+
+Ensure you understand what happens.
+
+Try to compute the mean of number of passengers.
+
+Hint:
+
+* The mapper should compute sum and count of passengers
+* The reduced should compute `mean <- sum / count`
+
 
 Analysing by hour
 =================
@@ -204,6 +254,153 @@ Plotting the results
 
 ```{r mapreduce-7-plot-2, echo=FALSE, out.width="1500px", out.height="1000px"}
 ```
+
+
+Putting files in hdfs with rhdfs
+===============
+type: section
+
+rhdfs function overview
+=======================
+
+* Initialize
+  - `hdfs.init()`
+  - `hdfs.defaults()`
+* File and directory manipulation
+  - `hdfs.ls()`
+  - `hdfs.delete()`
+  - `hdfs.mkdir()`
+  - `hdfs.exists()`
+* Copy and move from local <-> HDFS
+  - `hdfs.put()`
+  - `hdfs.get()`
+
+***
+
+* Manipulate files within HDFS
+  - `hdfs.copy()`
+  - `hdfs.move()`
+  - `hdfs.rename()`
+* Reading files directly from HDFS
+  - `hdfs.file()`
+  - `hdfs.read()`
+  - `hdfs.write()`
+  - `hdfs.flush()`
+  - `hdfs.seek()`
+  - `hdfs.tell(con)`
+  - `hdfs.close()`
+  - `hdfs.line.reader()`
+  -  `hdfs.read.text.file()`
+
+
+Putting the data from local file system to dfs
+============
+
+You use the `rhdfs` package to manipulate files in the hadoop dfs.
+
+```{r put-taxi-in-dfs, cache=FALSE, include=FALSE}
+read_chunk("utils/put-taxi-data-to-dfs.R")
+```
+
+```{r rhdfs, eval=FALSE}
+```
+
+
+Exercise 3
+==========
+type: cobalt
+
+* Open the folder `exercises`
+* Open the file `ex-3-put-taxi-data-to-dfs.R`
+* Source the script
+
+Use the `rhdfs` functions to satisfy yourself the files are in hadoop.
+
+Hint: Use `hdfs.ls()`
+
+Running the script in Hadoop compute context
+=================
+type: section
+
+
+Running the script in Hadoop compute context
+=================
+
+Once you've tested your script in local context, it is generally very easy to deploy on all your data.
+
+```{r, eval=FALSE}
+rmr.options(backend = "hadoop")
+```
+
+What the hadoop output means
+============
+
+```
+packageJobJar: [] [/usr/lib/hadoop-mapreduce/hadoop-streaming-2.4.0.2.1.5.0-695.jar] /tmp/streamjob4577673905010649130.jar tmpDir=null
+15/06/23 14:18:01 INFO impl.TimelineClientImpl: Timeline service address: http://0.0.0.0:8188/ws/v1/timeline/
+15/06/23 14:18:01 INFO client.RMProxy: Connecting to ResourceManager at ra-ldn-cluster-master-02.cloudapp.net/172.16.0.5:8050
+15/06/23 14:18:02 INFO impl.TimelineClientImpl: Timeline service address: http://0.0.0.0:8188/ws/v1/timeline/
+....
+15/06/23 14:18:17 INFO mapreduce.Job: Job job_1434365936669_0041 running in uber mode : false
+15/06/23 14:18:17 INFO mapreduce.Job:  map 0% reduce 0%
+15/06/23 14:18:31 INFO mapreduce.Job:  map 1% reduce 0%
+15/06/23 14:18:34 INFO mapreduce.Job:  map 17% reduce 0%
+15/06/23 14:18:40 INFO mapreduce.Job:  map 19% reduce 0%
+15/06/23 14:18:41 INFO mapreduce.Job:  map 21% reduce 0%
+15/06/23 14:18:47 INFO mapreduce.Job:  map 37% reduce 0%
+15/06/23 14:18:48 INFO mapreduce.Job:  map 92% reduce 0%
+15/06/23 14:18:49 INFO mapreduce.Job:  map 92% reduce 19%
+15/06/23 14:18:50 INFO mapreduce.Job:  map 100% reduce 19%
+15/06/23 14:18:52 INFO mapreduce.Job:  map 100% reduce 100%
+15/06/23 14:19:00 INFO mapreduce.Job: Job job_1434365936669_0041 completed successfully
+...
+  rmr
+		reduce calls=24
+15/06/23 14:19:01 INFO streaming.StreamJob: Output directory: /tmp/file55a346591243
+```
+
+Exercise 4
+==========
+type: cobalt
+
+* Open the folder `exercises`
+* Open the file `ex-4-taxi-hadoop.R`
+* Source the script
+
+
+
+Summary
+=========
+type: section
+
+
+Summary
+=========
+
+In this session you:
+
+* Used an Azure cluster running HortonWorks
+* Developed scripts in local context with the `rmr2` package:
+  - Write mappers
+  - Wrote reducers
+  - Used `mapreduce()`
+* Returned data to your local R session, for plotting
+* Uploaded files into hdfs using `rhdfs`
+* Ran the script directly in hadoop, using the hadoop context
+
+Questions
+=========
+type: section
+
+
+Questions
+=========
+
+
+?
+?
+?
+
 
 
 End

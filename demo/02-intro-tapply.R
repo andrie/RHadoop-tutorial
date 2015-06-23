@@ -4,8 +4,6 @@ library(rhdfs)
 hdfs.init()
 
 rmr.options(backend = "local")
-rmr.options(backend.parameters = list("mapreduce.map.java.opts=-Xmx800M",
-                                      "mapreduce.reduce.java.opts=-Xmx800M"))
 
 ## @knitr R ---------------------------------------------------------------
 

@@ -37,7 +37,7 @@ colClasses
 
 taxi.format <- make.input.format(format = "csv", sep = ",",
                                  col.names = names(headerInfo),
-#                                  colClasses = colClasses,
+                                 colClasses = colClasses,
                                  stringsAsFactors = FALSE
 )
 

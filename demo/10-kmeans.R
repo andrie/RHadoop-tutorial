@@ -13,6 +13,7 @@
 # limitations under the License.
 
 library(rmr2)
+rmr.options(backend = "local")
 
 ##  kmeans-signature
 kmeans.mr <- function(P, num.clusters, num.iter, combine, in.memory.combine) {

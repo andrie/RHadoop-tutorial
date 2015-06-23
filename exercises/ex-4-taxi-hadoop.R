@@ -5,7 +5,6 @@ hdfs.init()
 rmr.options(backend = "hadoop")
 
 hdfs.ls("taxi")$file
-# taxi.hdp <- "/user/andrie.devries/taxi"
 homeFolder <- file.path("/user", Sys.getenv("USER"))
 taxi.hdp <- file.path(homeFolder, "taxi")
 
