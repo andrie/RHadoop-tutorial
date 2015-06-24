@@ -6,8 +6,7 @@ rmr.options(backend = "hadoop")
 
 hdfs.ls("taxi")$file
 homeFolder <- file.path("/user", Sys.getenv("USER"))
-taxi.hdp <- file.path(homeFolder, "taxi")
-
+taxi.hdp <- file.path(homeFolder, "taxi/sample")
 
 headerInfo <- read.csv("data/dictionary_trip_data.csv", stringsAsFactors = FALSE)
 colClasses <- as.character(as.vector(headerInfo[1, ]))
