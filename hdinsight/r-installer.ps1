@@ -38,7 +38,7 @@ if (!$RhdfsSrc)
 
 # Download config action module from a well-known directory.
 $CONFIGACTIONURI = "https://hdiconfigactions.blob.core.windows.net/configactionmodulev02/HDInsightUtilities-v02.psm1";
-$CONFIGACTIONMODULE = "C:\HDInsightUtilities.psm1";
+$CONFIGACTIONMODULE = "$env:TEMP\HDInsightUtilities.psm1";
 $webclient = New-Object System.Net.WebClient;
 $webclient.DownloadFile($CONFIGACTIONURI, $CONFIGACTIONMODULE);
 
