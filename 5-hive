@@ -1,0 +1,163 @@
+Analysing New York taxis with RHadoop
+========================================================
+  author: Andrie de Vries & Michele Usuelli
+date: 2015-07-01, UseR!2015
+width: 1680
+height: 1050
+css: css/custom.css
+
+
+
+Introduction to Hive
+====
+  
+- Hadoop data warehouse
+- SQL-like interface
+- Language: HQL (Hive Query Language)
+- HQL translated into MapReduce jobs
+- R interface: RHive, RevoScaleR
+- Hue web interface
+
+
+
+
+Computing the number of taxi rides by hour
+====
+  
+Using Hive, we can replicate the rmr2 example counting the number of taxi runs by hour. The steps are
+
+1. Importing the data
+2. Querying the data
+
+
+
+
+Defining an external table
+====
+
+Starting from our data, we can create a Hive table. Since the data is already in a CSV format, the easiest option is creating an external table.
+
+We need to specify
+
+- The data location
+- The data format
+- The field formats
+
+
+
+
+Query to create an extenal table
+====
+
+```
+CREATE EXTERNAL TABLE taxi_sample(medallion STRING, hack_license STRING, vendor_id STRING, rate_code INT, store_and_fwd_flag STRING, pickup_datetime STRING, dropoff_datetime STRING, passenger_count INT, trip_time_in_secs INT, trip_distance FLOAT, pickup_longitude FLOAT, pickup_latitude FLOAT, dropoff_longitude FLOAT, dropoff_latitude FLOAT) ROW FORMAT
+DELIMITED FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE
+LOCATION '/user/andrie.devries/taxi/sample';
+```
+
+
+
+Query to create an external table - defining the field format
+====
+
+The first part of the query defines a table called *taxi_sample* and the format of its fields.
+
+```
+CREATE EXTERNAL TABLE taxi_sample(medallion STRING, hack_license STRING, vendor_id STRING, rate_code INT, store_and_fwd_flag STRING, pickup_datetime STRING, dropoff_datetime STRING, passenger_count INT, trip_time_in_secs INT, trip_distance FLOAT, pickup_longitude FLOAT, pickup_latitude FLOAT, dropoff_longitude FLOAT, dropoff_latitude FLOAT) ROW FORMAT
+```
+
+
+
+Query to create an external table: defining the data format
+====
+
+This part of the query defines the data format.
+
+```
+DELIMITED FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE
+```
+
+
+Query to create an external table: defining the data location
+====
+
+This part of the query defines the HDFS path to the data folder.
+
+```
+LOCATION '/user/andrie.devries/taxi/sample';
+```
+
+
+
+
+
+Simple query: count the number of records
+====
+
+```
+SELECT COUNT(*) FROM taxi_sample;
+```
+
+173187
+
+
+
+Defining the hour field
+====
+
+```
+SELECT pickup_datetime, substring(pickup_datetime, 12, 2) AS hour
+FROM taxi_sample LIMIT 100;
+```
+
+
+Field | Description
+---------- | -----------
+2013-10-01 00:29:36 | 00
+2013-10-01 00:31:00 | 00
+2013-10-01 00:38:36 | 00
+2013-10-01 00:46:00 | 00
+2013-10-01 00:50:08 | 00
+2013-10-01 01:00:00 | 01
+2013-10-01 01:07:00 | 01
+
+
+
+
+Count by hour
+====
+
+```
+SELECT substring(pickup_datetime, 12, 2) AS hour, COUNT(*) AS count
+FROM taxi_sample
+GROUP BY substring(pickup_datetime, 12, 2);
+```
+
+hour | count
+---- | -----
+00 | 6921
+01 | 5101
+02 | 3769
+03 | 2784
+04 | 2025
+05 | 1742
+06 | 3569
+
+
+
+
+Conclusions
+====
+
+- Hive allows to define group-by queries writing SQL-like code
+- The MapReduce code is not displayed
+- For more complex queries, we will still need to use other tools like rmr2
+
+
+
+
+
