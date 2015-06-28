@@ -24,7 +24,7 @@ query_create_external <- paste(
   
   "STORED AS TEXTFILE",
   
-  sprintf("LOCATION '%s';", data_location),
+  sprintf("LOCATION '%s';", hdfs_folder),
   
   sep = "\n"
 )
