@@ -14,7 +14,7 @@ rhive.connect(host = "127.0.0.1", hiveServer2 = TRUE)
 
 # table parameters --------------------------------------------------------
 name_table <- "taxi_sample" # "/rmr2/trip_data"
-data_location <- "/user/andrie.devries/taxi/sample"
+hdfs_folder <- "/user/andrie.devries/taxi/sample"
 field_separator <- ","
 
 
