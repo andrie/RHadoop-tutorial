@@ -1,4 +1,6 @@
-Analysing New York taxis with RHadoop
+
+
+Analysing New York taxis with rhive
 ========================================================
   author: Andrie de Vries & Michele Usuelli
 date: 2015-07-01, UseR!2015
@@ -20,6 +22,14 @@ Introduction to Hive
 
 
 
+Using Hive with R
+====
+
+- Building queries using string manipulation tools like sprintf and paste
+- Running queries using rhive
+
+
+
 
 Computing the number of taxi rides by hour
 ====
@@ -35,7 +45,7 @@ Using Hive, we can replicate the rmr2 example counting the number of taxi runs b
 Defining an external table
 ====
 
-Starting from our data, we can create a Hive table. Since the data is already in a CSV format, the easiest option is creating an external table.
+Starting from our data, we can create a Hive table. Since the data is already in CSV format, the easiest option is creating an external table.
 
 We need to specify
 
@@ -92,14 +102,19 @@ LOCATION '/user/andrie.devries/taxi/sample';
 ```
 
 
-
-
-
 Simple query: count the number of records
 ====
 
+
+```{r eval=TRUE}
+name_table <- "taxi_sample"
+query_count <- sprintf("SELECT COUNT(*) FROM %s",
+                       name_table)
+cat(query_count)
 ```
-SELECT COUNT(*) FROM taxi_sample;
+
+```{r eval=FALSE}
+rhive.query(query_count)
 ```
 
 173187
@@ -109,9 +124,24 @@ SELECT COUNT(*) FROM taxi_sample;
 Defining the hour field
 ====
 
+```{r eval=TRUE}
+field_time <- "pickup_datetime"
+field_hour <- sprintf("substring(%s, 12, 2)",
+                      field_time)
+query_hour <- sprintf(
+  "SELECT %s, %s AS hour
+  FROM %s LIMIT 100;",
+                      field_time, field_hour, name_table)
+cat(query_hour)
 ```
-SELECT pickup_datetime, substring(pickup_datetime, 12, 2) AS hour
-FROM taxi_sample LIMIT 100;
+
+
+
+Defining the hour field
+====
+
+```{r eval=FALSE}
+rhive.query(query_hour)
 ```
 
 
@@ -131,10 +161,21 @@ Field | Description
 Count by hour
 ====
 
+```{r eval=TRUE}
+query_count <- sprintf(
+"SELECT %s AS hour, COUNT(*) AS count
+FROM %s
+GROUP BY %s;",
+field_hour, name_table, field_hour)
+cat(query_count)
 ```
-SELECT substring(pickup_datetime, 12, 2) AS hour, COUNT(*) AS count
-FROM taxi_sample
-GROUP BY substring(pickup_datetime, 12, 2);
+
+
+Count by hour
+====
+
+```{r eval=FALSE}
+rhive.query(query_count)
 ```
 
 hour | count
@@ -155,7 +196,9 @@ Conclusions
 
 - Hive allows to define group-by queries writing SQL-like code
 - The MapReduce code is not displayed
-- For more complex queries, we will still need to use other tools like rmr2
+- R tools for string manipulation allow to easily build complex queries
+- rhive allows to run Hive queries directly from R
+- For more complex queries, we still need to use other tools like rmr2
 
 
 
