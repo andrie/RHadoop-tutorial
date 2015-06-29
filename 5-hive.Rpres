@@ -1,4 +1,4 @@
-Analysing New York taxis with rhive
+Analysing New York taxis with RHive
 ========================================================
 author: Andrie de Vries & Michele Usuelli
 date: 2015-07-01, UseR!2015
@@ -24,7 +24,25 @@ Using Hive with R
 ====
 
 - Building queries using string manipulation tools like sprintf and paste
-- Running queries using rhive
+- Running queries using RHive
+
+
+Syntax difference between Hive and RHive
+====
+type: alert
+
+- Hive: semi-colon in the end
+
+```
+SELECT COUNT(*) FROM table_data;
+```
+
+- RHive: no semi-colon in the end
+
+```
+SELECT COUNT(*) FROM table_data
+```
+
 
 
 
@@ -62,7 +80,7 @@ CREATE EXTERNAL TABLE taxi_sample(medallion STRING, hack_license STRING, vendor_
 DELIMITED FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE
-LOCATION '/user/andrie.devries/taxi/sample';
+LOCATION '/user/share/taxi/sample';
 ```
 
 
@@ -96,52 +114,79 @@ Query to create an external table: defining the data location
 This part of the query defines the HDFS path to the data folder.
 
 ```
-LOCATION '/user/andrie.devries/taxi/sample';
+LOCATION '/user/share/taxi/sample';
 ```
+
+
+Setting up RHive
+====
+
+```{r 2-hive-queries.R, cache=FALSE, include=FALSE}
+read_chunk("hive/2-hive-queries.R")
+```
+
+```{r configure-rhive}
+```
+
+
 
 
 Simple query: count the number of records
 ====
 
 
-```{r}
-library("RHive")
-name_table <- "taxi_sample"
-query_count <- sprintf("SELECT COUNT(*) FROM %s",
-                       name_table)
-cat(query_count)
+```{r row-count}
 ```
 
-```{r}
-rhive.query(query_count)
+```{r run-row-count, cache=TRUE}
 ```
 
 
 
-
-Defining the hour field
+Simple query: count the number of records
 ====
 
-```{r}
-field_time <- "pickup_datetime"
-field_hour <- sprintf("substring(%s, 12, 2)",
-                      field_time)
-query_hour <- sprintf(
-  "SELECT %s, %s AS hour
-  FROM %s LIMIT 100;",
-                      field_time, field_hour, name_table)
-cat(query_hour)
+
+```{r build-row-count}
+```
+
+```{r run-row-count, cache=TRUE}
 ```
 
 
 
-Defining the hour field
+
+Define the hour
 ====
 
-```{r}
-rhive.query(query_hour)
+```{r define-hour}
 ```
 
+
+
+
+
+Define the hour
+====
+
+```{r build-define-hour}
+```
+
+
+
+Define the hour
+====
+
+```{r run-define-hour, cache=TRUE}
+```
+
+
+
+Count by hour
+====
+
+```{r count-by-hour}
+```
 
 
 
@@ -149,33 +194,16 @@ rhive.query(query_hour)
 Count by hour
 ====
 
-```{r eval=TRUE}
-query_count <- sprintf(
-"SELECT %s AS hour, COUNT(*) AS count
-FROM %s
-GROUP BY %s;",
-field_hour, name_table, field_hour)
-cat(query_count)
+```{r build-count-by-hour}
 ```
+
 
 
 Count by hour
 ====
 
-```{r eval=FALSE}
-rhive.query(query_count)
+```{r run-count-by-hour, cache=TRUE}
 ```
-
-hour | count
----- | -----
-00 | 6921
-01 | 5101
-02 | 3769
-03 | 2784
-04 | 2025
-05 | 1742
-06 | 3569
-
 
 
 
@@ -185,7 +213,7 @@ Conclusions
 - Hive allows to define group-by queries writing SQL-like code
 - The MapReduce code is not displayed
 - R tools for string manipulation allow to easily build complex queries
-- rhive allows to run Hive queries directly from R
+- RHive allows to run Hive queries directly from R
 - For more complex queries, we still need to use other tools like rmr2
 
 
