@@ -1,5 +1,5 @@
 
-source("0-configure.R")
+source("hive/0-configure.R")
 
 # queries -----------------------------------------------------------------
 
