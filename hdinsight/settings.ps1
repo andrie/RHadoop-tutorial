@@ -10,7 +10,7 @@ $settings = New-Object PSObject -Property @{
 
     # Storage account
     StorageAccountName = "$($prefix)rhadooptutorial"
-    StorageAccountLabel = "RHaddop-tutorial"
+    StorageAccountLabel = "RHadoop-tutorial"
     StorageAccountLocation = "West Europe"
 
     # Cluster
