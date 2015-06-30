@@ -93,6 +93,13 @@ Some important components
   - `RHbase`
 
 
+The Azure cluster
+==========
+
+You are using a HortonWorks Hadoop cluster, provisioned in the Microsoft Azure cloud
+
+![](images/cluster-structure.png)
+
 MapReduce
 ============
 type: section
